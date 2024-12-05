@@ -71,8 +71,13 @@ class _RegisterPageState extends State<RegisterPage> {
               );
             }
           },
-          child: Center(
-            child: registerForm(context),
+          child: BlocBuilder<RegisterBloc, RegisterState>(
+            builder: (context, state) {
+              if (state is RegisterLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return registerForm(context);
+            },
           ),
         ),
       ),
@@ -162,22 +167,25 @@ class _RegisterPageState extends State<RegisterPage> {
                     });
                   },
                 ),
-                TextFormField(
-                  controller: birthDateController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: "Date of Birth",
-                    hintText: "Select your birth date",
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: TextFormField(
+                    controller: birthDateController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      
+                      hintText: "Select your birth date",
+                      border: OutlineInputBorder(),
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    onTap: () => _selectDate(context),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please select your date of birth";
+                      }
+                      return null;
+                    },
                   ),
-                  onTap: () => _selectDate(context),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please select your date of birth";
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 16),
                 PasswordFormField(
@@ -204,35 +212,40 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (globalKey.currentState!.validate()) {
-                          try {
-                            context.read<RegisterBloc>().add(
-                                  RegisterSubmitted(
-                                    username: usernameController.text,
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                    gender: selectedGender!,
-                                    dob: birthDateController.text,
-                                  ),
+                    padding: EdgeInsets.all(8.0),
+                    child: SizedBox(
+                        width: double.infinity,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (globalKey.currentState!.validate()) {
+                              try {
+                                context.read<RegisterBloc>().add(
+                                      RegisterSubmitted(
+                                        username: usernameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        gender: selectedGender!,
+                                        dob: birthDateController.text,
+                                      ),
+                                    );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("Registration failed: $e")),
                                 );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text("Registration failed: $e")),
-                            );
-                            print(e);
-                          }
-                        }
-                      },
-                      child: Text("Register"),
-                    ),
-                  ),
-                ),
+                                print(e);
+                              }
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.green[400],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(child: Text('Login')),
+                          ),
+                        ))),
               ],
             ),
           ),
