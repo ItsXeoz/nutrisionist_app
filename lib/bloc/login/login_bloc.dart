@@ -13,14 +13,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginSubmitted event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
 
-    const String apiUrl = "https://backend-nutrisionist-production.up.railway.app/api/v1/auth/login"; 
+    const String apiUrl = "https://backend-nutrisionist-production.up.railway.app/api/v1/auth/login";
 
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "username": event.username,
+          "email": event.username,
           "password": event.password,
         }),
       );
@@ -28,13 +28,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (data["success"] == true) {
-          emit(LoginSuccess(token: data["token"]));
+        if (data["status"] == "Success") {
+          // Extract and handle the token
+          final String token = data["data"]["token"];
+          emit(LoginSuccess(token: token));
         } else {
           emit(LoginFailure(error: data["message"] ?? "Login failed"));
         }
       } else {
-        emit(LoginFailure(error: "Server error"));
+        emit(LoginFailure(error: "Server error: ${response.statusCode}"));
       }
     } catch (e) {
       emit(LoginFailure(error: "An error occurred: $e"));

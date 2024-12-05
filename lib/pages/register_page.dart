@@ -22,7 +22,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController birthDateController = TextEditingController();
 
   // Nilai awal dropdown
@@ -218,17 +219,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                     gender: selectedGender!,
                                     dob: birthDateController.text,
                                   ),
-                                  
                                 );
-                                
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Registration failed: $e")),
+                              SnackBar(
+                                  content: Text("Registration failed: $e")),
                             );
                             print(e);
                           }
                         }
-
                       },
                       child: Text("Register"),
                     ),
@@ -243,4 +242,4 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-List<String> gender = ['Male', 'Female'];
+List<String> gender = ['male', 'female'];
