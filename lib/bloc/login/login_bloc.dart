@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'login_event.dart';
 import 'login_state.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {
@@ -30,8 +32,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         if (data["status"] == "Success") {
           // Extract and handle the token
-          final String token = data["data"]["token"];
-          emit(LoginSuccess(token: token));
+          final storage = FlutterSecureStorage();
+          await storage.write(key: "auth_token", value: data["data"]["token"]);
+
+          emit(LoginSuccess(token: data["data"]["token"]));
         } else {
           emit(LoginFailure(error: data["message"] ?? "Login failed"));
         }

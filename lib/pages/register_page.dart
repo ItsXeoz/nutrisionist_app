@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:nutrisionist_app/bloc/register/register_bloc.dart';
 import 'package:nutrisionist_app/bloc/register/register_event.dart';
 import 'package:nutrisionist_app/bloc/register/register_state.dart';
-import 'package:nutrisionist_app/pages/home_page.dart';
+import 'package:nutrisionist_app/pages/main_page.dart';
 import 'package:nutrisionist_app/widget/form_field.dart';
 import 'package:nutrisionist_app/widget/password_form_field.dart';
 
@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
           listener: (context, state) {
             if (state is RegisterSuccess) {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => MainPage()));
             } else if (state is RegisterFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
@@ -173,7 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: birthDateController,
                     readOnly: true,
                     decoration: InputDecoration(
-                      
+                      fillColor: Colors.white,
                       hintText: "Select your birth date",
                       border: OutlineInputBorder(),
                       suffixIcon: Icon(Icons.calendar_today),

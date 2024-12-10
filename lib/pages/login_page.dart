@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nutrisionist_app/bloc/login/login_bloc.dart';
 import 'package:nutrisionist_app/bloc/login/login_event.dart';
 import 'package:nutrisionist_app/bloc/login/login_state.dart';
-import 'package:nutrisionist_app/pages/home_page.dart';
+import 'package:nutrisionist_app/pages/main_page.dart';
 import 'package:nutrisionist_app/pages/register_page.dart';
 import 'package:nutrisionist_app/widget/form_field.dart';
 import 'package:nutrisionist_app/widget/password_form_field.dart';
@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
           listener: (context, state) {
             if (state is LoginSuccess) {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => MainPage()));
             }
             if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
